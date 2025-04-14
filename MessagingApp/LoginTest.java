@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */ 
 package com.mycompany.messagingapp;
 
 import org.junit.jupiter.api.AfterAll;
@@ -11,87 +7,78 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginTest {
 
-   static Login login;
+    static Login login;
 
     @BeforeAll
     public static void setUpClass() {
-        login = new Login();
+        // Create a new Login object with default test values
+        login = new Login("kyl_1", "Ch&&sec@ke99!", "+27838968976", "kyle", "emily");
     }
 
     @AfterAll
     public static void tearDownClass() {
-        login = null; // Setting login to null for cleanup purposes
+        login = null;
     }
 
     @Test
     public void testCheckUserName_Correct() {
-        assertTrue(login.checkUserName("kyl_1"));
+        assertTrue(login.checkUserName());
     }
 
     @Test
     public void testCheckUserName_Incorrect() {
-        assertFalse(login.checkUserName("kyle!!!!!!!"));
+        Login testLogin = new Login("kyle!!!!!!!", "Pass123!", "+27838968976", "Test", "User");
+        assertFalse(testLogin.checkUserName());
     }
 
     @Test
     public void testCheckPasswordComplexity_Correct() {
-        assertTrue(login.checkPasswordComplexity("Ch&&sec@ke99!"));
+        assertTrue(login.checkPasswordComplexity());
     }
 
     @Test
     public void testCheckPasswordComplexity_Incorrect() {
-        assertFalse(login.checkPasswordComplexity("password")); // Simple password
+        Login testLogin = new Login("user_", "password", "+27830000000", "Test", "User");
+        assertFalse(testLogin.checkPasswordComplexity());
     }
 
     @Test
     public void testCheckCellPhoneNumber_Correct() {
-        assertTrue(login.checkCellPhoneNumber("+27838968976"));
+        assertTrue(login.checkCellPhoneNumber());
     }
 
     @Test
     public void testCheckCellPhoneNumber_Incorrect() {
-        assertFalse(login.checkCellPhoneNumber("08966553")); // Invalid phone number format
+        Login testLogin = new Login("user_", "Password1!", "08966553", "Test", "User");
+        assertFalse(testLogin.checkCellPhoneNumber());
     }
 
     @Test
     public void testRegisterUser_Success() {
-        login.setUsername("kyl_1");
-        login.setPassword("Ch&&sec@ke99!");
-        login.setCellPhone("+27838968976");
-        
-        String message = login.registerUser();
-        assertEquals("User registered successfully.", message);
+        Login testLogin = new Login("kyl_1", "Ch&&sec@ke99!", "+27838968976", "kyle", "emily");
+        String message = testLogin.registerUser();
+        assertEquals("User registered successfully", message);
     }
 
     @Test
     public void testLoginUser_Success() {
-        login.setUsername("kyl_1");
-        login.setPassword("Ch&&sec@ke99!");
-        login.registerUser(); // Registering the user before logging in
-        
-        assertTrue(login.loginUser("kyl_1", "Ch&&sec@ke99!")); // Successful login
+        assertTrue(login.loginUser("kyl_1", "Ch&&sec@ke99!"));
     }
 
     @Test
     public void testLoginUser_Failure() {
-        assertFalse(login.loginUser("wrongUser", "wrongPass")); // Attempt to log in with incorrect credentials
+        assertFalse(login.loginUser("wrongUser", "wrongPass"));
     }
 
     @Test
     public void testReturnLoginStatus_Success() {
-        login.setFirstName("kyle");
-        login.setLastName("Doe"); // Providing a reasonable last name
-        login.setUsername("kyl_1");
-        login.setPassword("Ch&&sec@ke99!");
-        login.registerUser(); // Registering the user
-        
-        login.loginUser("kyl_1", "Ch&&sec@ke99!"); // Logging in the registered user
-        assertEquals("Welcome kyle, Doe it is great to see you again.", login.returnLoginStatus());
+        String message = login.returnLoginStatus("kyl_1", "Ch&&sec@ke99!");
+        assertEquals("Welcome kyle ,emily it is great to see you again.", message);
     }
 
     @Test
     public void testReturnLoginStatus_Failure() {
-        login.loginUser("kyl_1", "wrongPass"); // Attempting to log in with incorrect password
-        assertEquals("Username or password incorrect, please try again.", login.returnLoginStatus());
+        String message = login.returnLoginStatus("kyl_1", "wrongPass");
+        assertEquals(" Username or password incorrect; please try again", message);
     }
-} 
+}
